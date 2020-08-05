@@ -8,7 +8,7 @@ from statistics import mean
 
 torch.cuda.empty_cache()
 model = transformers.BertModel.from_pretrained("bert-base-multilingual-cased", output_hidden_states="true")
-model.to("cuda")
+#model.to("cuda")
 tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-multilingual-cased")
 
 
@@ -177,9 +177,9 @@ def average_deviance(dictionary, min_n):
     return torch.mean(torch.stack([dictionary[k][2] for k in dictionary if dictionary[k][0] >= min_n]), 0)
 
 
-def comparison(language1, language2, pos, min_n=25, lemma=False):
-    language1_MD = pickle.load(open(("postprocessed/" + language1 + "/" + language1 + "_" + pos + "_MDDict.pk"), "rb"))
-    language2_MD = pickle.load(open(("postprocessed/" + language2 + "/" + language2 + "_" + pos + "_MDDict.pk"), "rb"))
+def variance_output(language, pos, min_n=25, lemma=False):
+    language_MD = pickle.load(open(("postprocessed/" + language + "/" + language + "_" + pos + "_MDDict.pk"), "rb"))
+    #language2_MD = pickle.load(open(("postprocessed/" + language2 + "/" + language2 + "_" + pos + "_MDDict.pk"), "rb"))
 
     # else:
     #     language1_MD = pickle.load(
@@ -187,25 +187,19 @@ def comparison(language1, language2, pos, min_n=25, lemma=False):
     #     language2_MD = pickle.load(
     #         open(("postprocessed/"+language2+"/"+language2 + "_" + pos + "_word_MD.pk"), "rb"))
     if lemma:
-        print(average_deviance(language1_MD["LEM"], min_n))
-        print(average_deviance(language2_MD["LEM"], min_n))
+        return(average_deviance(language_MD["LEM"], min_n))
     else:
-        print(average_deviance(language1_MD["WRD"], min_n))
-        print(average_deviance(language2_MD["WRD"], min_n))
+        return(average_deviance(language_MD["WRD"], min_n))
 
 # languages = ["Vietnamese","Turkish"]
 #
 # for language in languages:
 #     lang_preprocess(language,"train")
+
 #     lang_process(language,"VERB")
 #     lang_process(language,"NOUN")
 #     vec_mean_dev(language, "VERB")
 #     vec_mean_dev(language,"NOUN")
-#
-# comparison("Russian","English","NOUN")
-# comparison("Russian","Chinese","NOUN")
-# comparison("Chinese","Italian","VERB")
-# comparison("Chinese","German","VERB")
 
 # lang_preprocess("English","train")
 # lang_process("English", "VERB")
